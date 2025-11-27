@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('image', 40)->nullable();
             $table->timestamps();
             $table->foreign('language_id')->references('id')->on('languages')->restrictOnDelete()->restrictOnUpdate();
-            $table->timestamps();
         });
     }
 
