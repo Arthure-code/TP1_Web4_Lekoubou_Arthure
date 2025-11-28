@@ -17,12 +17,14 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-     protected $fillable = [
+    protected $fillable = [
         'login',
         'email',
         'password',
         'first_name',
         'last_name',
+        'language_id',
+
     ];
 
     /**
@@ -54,5 +56,10 @@ class User extends Authenticatable
     public function critics()
     {
         return $this->hasMany(Critic::class);
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
     }
 }

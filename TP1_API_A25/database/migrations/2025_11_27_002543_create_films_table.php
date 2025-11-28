@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('films', function (Blueprint $table) {
+         Schema::create('films', function (Blueprint $table) {
             $table->id();
             $table->string('title', 50);
             $table->text('description')->nullable();
-            $table->string('release_year', 4)->nullable();
-            $table->unsignedBigInteger('language_id');
+            $table->char('release_year', 4)->nullable(); 
+            $table->foreignId('language_id')
+                  ->constrained('languages')
+                  ->restrictOnDelete()
+                  ->restrictOnUpdate();
             $table->unsignedSmallInteger('length')->nullable();
             $table->string('rating', 5)->nullable();
             $table->string('special_features', 200)->nullable();
             $table->string('image', 40)->nullable();
             $table->timestamps();
-            $table->foreign('language_id')->references('id')->on('languages')->restrictOnDelete()->restrictOnUpdate();
         });
     }
 

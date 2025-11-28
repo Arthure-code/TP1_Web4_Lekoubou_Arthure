@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('critics', function (Blueprint $table) {
+       Schema::create('critics', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('film_id');
+            $table->foreignId('user_id')
+                  ->constrained('users')
+                  ->cascadeOnDelete()
+                  ->cascadeOnUpdate();
+            $table->foreignId('film_id')
+                  ->constrained('films')
+                  ->cascadeOnDelete()
+                  ->cascadeOnUpdate();
             $table->decimal('score', 3, 1);
             $table->text('comment')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreign('film_id')->references('id')->on('films')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
