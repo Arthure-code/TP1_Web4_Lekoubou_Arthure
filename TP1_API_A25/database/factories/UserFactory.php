@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Language;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -24,12 +24,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'login' => $this->faker->unique()->userName(),
-            'first_name' => $this->faker->firstName(),
-            'last_name' => $this->faker->lastName(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'login'       => $this->faker->unique()->userName,
+            'email'       => $this->faker->unique()->safeEmail,
+            'password'    => bcrypt('password'),
+            'first_name'  => $this->faker->firstName,
+            'last_name'   => $this->faker->lastName,
+            'language_id' => Language::query()->inRandomOrder()->value('id') ?? Language::factory()->create()->id,
             'remember_token' => Str::random(10),
         ];
     }
@@ -39,7 +39,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

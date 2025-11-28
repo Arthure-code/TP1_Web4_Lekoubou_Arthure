@@ -1,29 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
+
+
 use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
 use App\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    //Créer un nouvel utilisateur
     public function creerUtilisateur(StoreUserRequest $request)
     {
         $donnees = $request->validated();
         $donnees['password'] = Hash::make($donnees['password']);
         $utilisateur = User::create($donnees);
-        return (new UserResource($utilisateur))->response()->setStatusCode(201);
+        return (new UserResource($utilisateur))->response()->setStatusCode(Response::HTTP_CREATED);
     }
 
-    //  Mettre à jour un utilisateur existant
     public function mettreAJourUtilisateur(UpdateUserRequest $request, $id)
     {
         $utilisateur = User::find($id);
         if (!$utilisateur) {
-            return response()->json(['message' => 'Utilisateur introuvable'], 404);
+            return response()->json(['message' => 'Utilisateur introuvable'], Response::HTTP_NOT_FOUND);
         }
         $donnees = $request->validated();
         $donnees['password'] = Hash::make($donnees['password']);
@@ -31,12 +32,11 @@ class UserController extends Controller
         return new UserResource($utilisateur);
     }
 
-    // Obtenir le langage préféré d’un utilisateur
     public function obtenirLangagePrefere($id)
     {
         $utilisateur = User::with(['critics.film.language'])->find($id);
         if (!$utilisateur) {
-            return response()->json(['message' => 'Utilisateur introuvable'], 404);
+            return response()->json(['message' => 'Utilisateur introuvable'], Response::HTTP_NOT_FOUND);
         }
 
         $compteur = [];
@@ -50,15 +50,15 @@ class UserController extends Controller
             return response()->json([
                 'user_id' => $utilisateur->id,
                 'langage_prefere' => null
-            ], 200);
+            ], Response::HTTP_OK);
         }
 
         arsort($compteur);
-        $langagePrefere = array_key_first($compteur);
+        $langage_prefere = array_key_first($compteur);
 
         return response()->json([
             'user_id' => $utilisateur->id,
-            'langage_prefere' => $langagePrefere
-        ], 200);
+            'langage_prefere' => $langage_prefere
+        ], Response::HTTP_OK);
     }
 }

@@ -15,15 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+       $this->call([
             LanguagesSeeder::class,
             FilmsSeeder::class,
             ActorsSeeder::class,
             ActorFilmSeeder::class,
+            UsersSeeder::class,
+            CriticsSeeder::class,
         ]);
-
-        User::factory(10)->create()->each(function ($user) {
-            Critic::factory(30)->create(['user_id' => $user->id]);
-        });
     }
 }
