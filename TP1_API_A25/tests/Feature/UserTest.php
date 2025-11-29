@@ -21,7 +21,6 @@ class UserTest extends TestCase
             'email' => 'test@example.com',
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'language_id' => $language->id,
         ];
 
         $response = $this->postJson('/api/users', $donnees);
@@ -74,52 +73,54 @@ class UserTest extends TestCase
     }
 
     public function testPutUserMetAJourUtilisateur(): void
-    {
-        $user = User::factory()->create([
-            'login' => 'oldlogin',
-            'email' => 'old@example.com'
-        ]);
+{
+    $langue = Language::factory()->create(['name' => 'English']);
+    $user = User::factory()->create([
+        'login' => 'oldlogin',
+        'email' => 'old@example.com',
+    ]);
 
-        $donnees = [
-            'login' => 'newlogin',
-            'password' => 'newpassword123',
-            'email' => 'new@example.com',
-            'first_name' => 'Updated',
-            'last_name' => 'Name'
-        ];
+    $donnees = [
+        'login' => 'newlogin',
+        'password' => 'newpassword123',
+        'email' => 'new@example.com',
+        'first_name' => 'Updated',
+        'last_name' => 'Name',
+    ];
 
-        $response = $this->putJson("/api/users/{$user->id}", $donnees);
+    $response = $this->putJson("/api/users/{$user->id}", $donnees);
 
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonFragment([
-            'login' => 'newlogin',
-            'email' => 'new@example.com',
-            'first_name' => 'Updated',
-            'last_name' => 'Name'
-        ]);
+    $response->assertStatus(Response::HTTP_OK);
+    $response->assertJsonFragment([
+        'login' => 'newlogin',
+        'email' => 'new@example.com',
+        'first_name' => 'Updated',
+        'last_name' => 'Name'
+    ]);
 
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'login' => 'newlogin',
-            'email' => 'new@example.com'
-        ]);
-    }
+    $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'login' => 'newlogin',
+        'email' => 'new@example.com'
+    ]);
+}
 
-    public function testPutUserRetourne404SiUtilisateurInexistant(): void
-    {
-        $donnees = [
-            'login' => 'test',
-            'password' => 'password123',
-            'email' => 'test@example.com',
-            'first_name' => 'John',
-            'last_name' => 'Doe'
-        ];
+   public function testPutUserRetourne404SiUtilisateurInexistant(): void
+{
+    $donnees = [
+        'login' => 'test',
+        'password' => 'password123',
+        'email' => 'test@example.com',
+        'first_name' => 'John',
+        'last_name' => 'Doe',
 
-        $response = $this->putJson('/api/users/99999', $donnees);
+    ];
 
-        $response->assertStatus(Response::HTTP_NOT_FOUND);
-        $response->assertJson(['message' => 'Utilisateur introuvable']);
-    }
+    $response = $this->putJson('/api/users/99999', $donnees);
+
+    $response->assertStatus(Response::HTTP_NOT_FOUND);
+    $response->assertJson(['message' => 'Utilisateur introuvable']);
+}
 
     public function testPutUserRetourne422SiDonneesInvalides(): void
     {
@@ -183,5 +184,38 @@ class UserTest extends TestCase
 
         $response->assertStatus(Response::HTTP_NOT_FOUND);
         $response->assertJson(['message' => 'Utilisateur introuvable']);
+    }
+
+    public function testPutUserRetourne404SiUtilisateurInexistantAvecBodyValide(): void
+    {
+
+        $langue = \App\Models\Language::factory()->create();
+
+        $donnees = [
+            'login' => 'nouveau',
+            'password' => 'password123',
+            'email' => 'nouveau@example.com',
+            'first_name' => 'Test',
+            'last_name' => 'User',
+        ];
+
+        $response = $this->putJson('/api/users/99999', $donnees);
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+        $response->assertJson(['message' => 'Utilisateur introuvable']);
+    }
+
+    public function testPutUserRetourne422SiUtilisateurInexistantAvecBodyInvalide(): void
+    {
+        $donnees = [
+        'login' => '',
+        'email' => 'invalid-email',
+        'password' => 'pw',
+        'first_name' => '',
+        'last_name' => ''
+        ];
+
+        $response = $this->putJson('/api/users/99999', $donnees);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+       $response->assertJsonValidationErrors(['login', 'email', 'password', 'first_name', 'last_name']);
     }
 }

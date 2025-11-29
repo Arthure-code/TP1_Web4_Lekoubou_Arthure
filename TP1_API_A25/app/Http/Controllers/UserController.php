@@ -12,6 +12,30 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+
+    /**
+    * @OA\Post(
+    *   path="/api/users",
+    *   tags={"Users"},
+    *   summary="Creates a user",
+    *   @OA\Response(
+    *       response=201,
+    *       description="Created"
+    *   ),
+    *   @OA\RequestBody(
+    *       @OA\MediaType(
+    *           mediaType="application/json",
+    *           @OA\Schema(
+    *               @OA\Property(property="login", type="string"),
+    *               @OA\Property(property="password", type="string"),
+    *               @OA\Property(property="email", type="string"),
+    *               @OA\Property(property="first_name", type="string"),
+    *               @OA\Property(property="last_name", type="string")
+    *           )
+    *       )
+    *   )
+    * )
+    */
     public function creerUtilisateur(StoreUserRequest $request)
     {
         $donnees = $request->validated();
@@ -20,6 +44,28 @@ class UserController extends Controller
         return (new UserResource($utilisateur))->response()->setStatusCode(Response::HTTP_CREATED);
     }
 
+
+        /**
+    * @OA\Put(
+    *   path="/api/users/{id}",
+    *   tags={"Users"},
+    *   summary="Updates a user",
+    *   @OA\Response(response=200, description="OK"),
+    *   @OA\Parameter(name="id", in="path", required=true, description="user id"),
+    *   @OA\RequestBody(
+    *       @OA\MediaType(
+    *           mediaType="application/json",
+    *           @OA\Schema(
+    *               @OA\Property(property="login", type="string"),
+    *               @OA\Property(property="password", type="string"),
+    *               @OA\Property(property="email", type="string"),
+    *               @OA\Property(property="first_name", type="string"),
+    *               @OA\Property(property="last_name", type="string")
+    *           )
+    *       )
+    *   )
+    * )
+    */
     public function mettreAJourUtilisateur(UpdateUserRequest $request, $id)
     {
         $utilisateur = User::find($id);
@@ -32,6 +78,16 @@ class UserController extends Controller
         return new UserResource($utilisateur);
     }
 
+
+    /**
+    * @OA\Get(
+    *   path="/api/users/{id}/preferred-language",
+    *   tags={"Users"},
+    *   summary="Gets preferred language of a user",
+    *   @OA\Response(response=200, description="OK"),
+    *   @OA\Parameter(name="id", in="path", required=true, description="user id")
+    * )
+    */
     public function obtenirLangagePrefere($id)
     {
         $utilisateur = User::with(['critics.film.language'])->find($id);

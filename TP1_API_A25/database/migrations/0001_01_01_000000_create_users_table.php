@@ -18,9 +18,8 @@ return new class extends Migration
             $table->string('password', 255);
             $table->string('first_name', 50);
             $table->string('last_name', 50);
-            $table->foreignId('language_id')->constrained('languages');
             $table->rememberToken();
-            $table->timestamps();
+             $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

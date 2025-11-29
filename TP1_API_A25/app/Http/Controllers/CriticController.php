@@ -6,6 +6,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CriticController extends Controller
 {
+
+     /**
+    * @OA\Delete(
+    *   path="/api/critics/{id}",
+    *   tags={"Critics"},
+    *   summary="Deletes a critic",
+    *   @OA\Response(response=204, description="No Content"),
+    *   @OA\Parameter(name="id", in="path", required=true, description="critic id")
+    * )
+    */
     public function supprimerCritique($id)
     {
         $critique = Critic::find($id);

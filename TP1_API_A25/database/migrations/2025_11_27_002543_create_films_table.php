@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('title', 50);
             $table->text('description')->nullable();
-            $table->char('release_year', 4)->nullable(); 
+            $table->char('release_year', 4)->nullable();
             $table->foreignId('language_id')
                   ->constrained('languages')
                   ->restrictOnDelete()
                   ->restrictOnUpdate();
-            $table->unsignedSmallInteger('length')->nullable();
+            $table->unsignedInteger('length')->nullable();
             $table->string('rating', 5)->nullable();
             $table->string('special_features', 200)->nullable();
             $table->string('image', 40)->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable();
         });
     }
 
