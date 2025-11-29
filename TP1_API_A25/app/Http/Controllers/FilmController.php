@@ -10,11 +10,32 @@ use Symfony\Component\HttpFoundation\Response;
 class FilmController extends Controller
 {
 
+    /**
+    * @OA\Get(
+    *   path="/api/films",
+    *   tags={"Films"},
+    *   summary="Gets list of films",
+    *   @OA\Response(
+    *       response=200,
+    *       description="OK"
+    *   )
+    * )
+    */
     public function obtenirTousLesFilms()
     {
         return FilmResource::collection(Film::paginate(20));
     }
 
+
+     /**
+    * @OA\Get(
+    *   path="/api/films/{id}/actors",
+    *   tags={"Films"},
+    *   summary="Gets actors of a film",
+    *   @OA\Response(response=200, description="OK"),
+    *   @OA\Parameter(name="id", in="path", required=true, description="film id")
+    * )
+    */
     public function obtenirActeursDuFilm($id)
     {
         $film = Film::with('actors')->find($id);
@@ -28,7 +49,23 @@ class FilmController extends Controller
         ], Response::HTTP_OK);
     }
 
-
+/**
+    * @OA\Get(
+    *   path="/api/films/{id}/critiques",
+    *   tags={"Films"},
+    *   summary="Gets a film with its critics",
+    *   @OA\Response(
+    *       response=200,
+    *       description="OK"
+    *   ),
+    *   @OA\Parameter(
+    *       description="film id",
+    *       in="path",
+    *       name="id",
+    *       required=true
+    *   )
+    * )
+    */
     public function obtenirFilmAvecCritiques($id)
     {
         $film = Film::with('critics')->find($id);
@@ -41,6 +78,16 @@ class FilmController extends Controller
         ], Response::HTTP_OK);
     }
 
+
+        /**
+    * @OA\Get(
+    *   path="/api/films/{id}/moyenne-critiques",
+    *   tags={"Films"},
+    *   summary="Gets average score of a film",
+    *   @OA\Response(response=200, description="OK"),
+    *   @OA\Parameter(name="id", in="path", required=true, description="film id")
+    * )
+    */
     public function obtenirMoyenneCritiques($id)
     {
         $film = Film::find($id);
@@ -56,6 +103,19 @@ class FilmController extends Controller
         ], Response::HTTP_OK);
     }
 
+
+    /**
+    * @OA\Get(
+    *   path="/api/films/recherche",
+    *   tags={"Films"},
+    *   summary="Search films with criteria",
+    *   @OA\Response(response=200, description="OK"),
+    *   @OA\Parameter(name="keyword", in="query", description="Filter by title keyword"),
+    *   @OA\Parameter(name="rating", in="query", description="Filter by rating"),
+    *   @OA\Parameter(name="minLength", in="query", description="Minimum length"),
+    *   @OA\Parameter(name="maxLength", in="query", description="Maximum length")
+    * )
+    */
     public function rechercherFilms(Request $request)
     {
         $query = Film::query();
