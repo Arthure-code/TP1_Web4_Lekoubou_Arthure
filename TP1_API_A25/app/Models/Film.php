@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Film extends Model
 {
     use HasFactory;
+    const UPDATED_AT = null;
     protected $fillable = [
         'title',
         'description',
@@ -31,6 +32,6 @@ class Film extends Model
 
     public function actors()
     {
-        return $this->belongsToMany(Actor::class)->withTimestamps();
+        return $this->belongsToMany(Actor::class)->withTimestamps()->withTimestamps();
     }
 }
