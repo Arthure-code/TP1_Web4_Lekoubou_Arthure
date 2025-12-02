@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Film, User};
+use App\Models\Film;
 use App\Http\Resources\{ActorResource, CriticResource, FilmResource};
 use Symfony\Component\HttpFoundation\Response;
 
