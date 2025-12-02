@@ -21,3 +21,7 @@
 # Repository Pattern (référence future) : https://designpatternsphp.readthedocs.io/
 
 # FakerPHP - Génération de données factices : https://fakerphp.github.io/
+
+# Lien vers la collection postman : https://lekoubou-1509535.postman.co/workspace/Arthure-LEKOUBOU-DJUNE's-Worksp~bfe1c2e8-9ae7-4238-82b5-2c76c995b870/collection/49713863-96019e78-6a93-47a6-941a-9d3e64db0449?action=share&creator=49713863
+
+# Traducteur: reverso traductor, google traductor
